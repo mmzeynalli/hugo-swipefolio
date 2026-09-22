@@ -5,30 +5,30 @@
   {{ partial "head.html" . }}
 </head>
 
-<body>
-  <button class="hamburger" id="menuToggle">☰</button>
+<body class="{{ if .IsHome }}home{{ else }}gallery-page{{ end }}" data-site-title="{{ site.Title }}">
+  <button class="hamburger" id="menuToggle" type="button" aria-label="Toggle menu" aria-controls="sidebar"
+    aria-expanded="false">☰</button>
   <div class="overlay" id="overlay"></div>
 
-  <section class="header">
-    <header id="sideHeader">
-      <div class="mobile-menu-content">
-        {{ partial "header.html" . }}
-      </div>
+  <div class="layout">
+    <header class="sidebar" id="sidebar">
+      {{ partial "header.html" . }}
     </header>
 
     <main>
-      {{ block "main" . }}{{ end }}
-
+      <div class="content">
+        {{ block "main" . }}{{ end }}
+      </div>
       <footer>
         {{ partial "footer.html" . }}
       </footer>
     </main>
-  </section>
+  </div>
 
-
-  {{ $main := resources.Get "js/main.js" | js.Build }}
-  <script src="{{ $main.RelPermalink }}" defer></script>
+  {{ if not .IsHome }}
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
+  {{ end }}
+  {{ partial "head/js.html" . }}
 </body>
-
 
 </html>

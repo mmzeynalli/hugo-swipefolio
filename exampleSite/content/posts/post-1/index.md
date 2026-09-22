@@ -3,10 +3,15 @@ title = 'Post 1'
 date = 2023-01-15T09:00:00-07:00
 draft = false
 tags = ['red']
-
-slideshow = ['https://dl11.webmfiles.org/big-buck-bunny_trailer-.webm', 'https://placehold.co/1200x1000/0000FF/FFFFFF?text=Image+1', 'https://placehold.co/1200x1000/0000FF/FFFFFF?text=Image+2', 'https://placehold.co/1200x1000/0000FF/FFFFFF?text=Image+3']
-
 weight = 1
+
+# Absolute URLs, site-relative paths (static/) or page-bundle resources all work.
+slideshow = [
+  'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm',
+  'https://placehold.co/1200x1000/0000FF/FFFFFF?text=Image+1',
+  'https://placehold.co/1200x1000/0000FF/FFFFFF?text=Image+2',
+  'https://placehold.co/1200x1000/0000FF/FFFFFF?text=Image+3',
+]
 +++
 
 Tempor proident minim aliquip reprehenderit dolor et ad anim Lorem duis sint eiusmod. Labore ut ea duis dolor. Incididunt consectetur proident qui occaecat incididunt do nisi Lorem. Tempor do laborum elit laboris excepteur eiusmod do. Eiusmod nisi excepteur ut amet pariatur adipisicing Lorem.

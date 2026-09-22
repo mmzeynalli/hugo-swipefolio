@@ -1,48 +1,45 @@
 {{- define "main" -}}
-{{- $profile := .Site.Params.profile -}}
+{{- $profile := site.Params.profile | default dict -}}
 
-<link rel=preload href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css as=style
-    onload='this.onload=null,this.rel="stylesheet"'>
-<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css>
+<section class="about-card">
+  <h1 class="name">{{ site.Params.author.name }}</h1>
 
-<div class="option option-card">
+  {{- with $profile.avatarUrl }}
+  <div class="avatar">
+    <img src="{{ . }}" alt="" class="avatar-img" width="150" height="150">
+  </div>
+  {{- end }}
 
-    <div class="container">
-        <h1 class="name">{{ .Site.Params.Author.Name }}</h1>
+  {{- with $profile.about }}
+  <p class="description">{{ . }}</p>
+  {{- end }}
 
-        <div class="avatar">
-            <img src="{{ $profile.avatarUrl }}" alt="avatar" class="avatar-img">
-        </div>
+  {{- with $profile.social }}
+  {{- $socialMap := resources.Get "data/social.yml" | transform.Unmarshal }}
+  {{- $links := slice }}
+  {{- range $key, $id := . }}
+    {{- if $id }}
+      {{- with index $socialMap (lower $key) }}
+        {{- $href := "" }}
+        {{- if .Template }}{{ $href = printf .Template $id }}
+        {{- else if .Prefix }}{{ $href = printf "%s%s" .Prefix $id }}
+        {{- else if .Url }}{{ $href = .Url | relURL }}
+        {{- end }}
+        {{- $links = $links | append (dict "Href" $href "Title" .Title "Class" .Icon.Class "Weight" .Weight) }}
+      {{- else }}
+        {{- warnf "hugo-swipefolio: unknown social network %q in params.profile.social" $key }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+  {{- with $links }}
+  <div class="social-links">
+    {{- range sort . "Weight" }}
+    <a href="{{ .Href | safeURL }}" title="{{ .Title }}" aria-label="{{ .Title }}" rel="me noopener noreferrer" target="_blank"><i class="{{ .Class }}" aria-hidden="true"></i></a>
+    {{- end }}
+  </div>
+  {{- end }}
+  {{- end }}
 
-        <h2 class="description">
-            {{ $profile.about }}
-        </h2>
-
-        <!--noformat-->
-        {{ if $profile.social }}
-        <div class="social-links">
-            {{- $socialMap := resources.Get "data/social.yml" | transform.Unmarshal -}}
-            {{- $socialArr := slice -}}
-            {{- range $key, $value := $profile.social -}}
-                {{- if $value -}}
-                    {{- $social := $key | lower | index $socialMap | default dict -}}
-                    {{- $social = dict "Id" $value | merge $social -}}
-                    {{- $socialArr = $socialArr | append $social -}}
-                {{- end -}}
-            {{- end -}}
-
-            {{- range $socialArr -}}
-                <a href="{{ .Prefix | safeURL }}{{ .Id }}" title="{{ .Title }}" rel="noopener noreffer" target="_blank">
-                {{- with .Icon -}}
-                    <i class="{{ .Class }}"></i>
-                {{- end -}}
-                </a>
-            {{- end -}}
-        </div>
-        {{ end }}
-        <!--noformat-->
-    </div>
-</div>
-
-
+  {{ .Content }}
+</section>
 {{- end -}}

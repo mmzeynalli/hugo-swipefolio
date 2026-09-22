@@ -1,6 +1,7 @@
-<span>© Copyright {{ now.Year }}. All rights reserved. </span> ·
+<span>© {{ now.Year }}{{ with site.Params.author.name }} {{ . }}{{ end }}. All rights reserved.</span>
+<span class="footer-sep">·</span>
 <span>
-    Powered by
-    <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &amp;
-    <a href="https://github.com/mmzeynalli/hugo-swiper" rel="noopener" target="_blank">Swiper</a>
+  Powered by
+  <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &amp;
+  <a href="https://github.com/mmzeynalli/hugo-swipefolio" rel="noopener noreferrer" target="_blank">Swipefolio</a>
 </span>
