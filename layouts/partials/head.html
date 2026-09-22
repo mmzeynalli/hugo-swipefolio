@@ -1,18 +1,27 @@
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width">
-<title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ printf "%s | %s" .Title site.Title }}{{ end }}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ with .Title }}{{ . }} | {{ end }}{{ site.Title }}{{ end }}</title>
+{{ with or .Description site.Params.description }}
+<meta name="description" content="{{ . }}">
+{{ end }}
+
 {{ partialCached "head/css.html" . }}
 
-{{- /* Favicons */}}
-<link rel="icon" href="{{ site.Params.assets.favicon | default "favicon.ico" | absURL }}">
-<link rel="icon" type="image/png" sizes="16x16" href="{{ site.Params.assets.favicon16x16 | default "favicon-16x16.png" | absURL }}">
-<link rel="icon" type="image/png" sizes="32x32" href="{{ site.Params.assets.favicon32x32 | default "favicon-32x32.png" | absURL }}">
-<link rel="apple-touch-icon" href="{{ site.Params.assets.apple_touch_icon | default "apple-touch-icon.png" | absURL }}">
-<link rel="mask-icon" href="{{ site.Params.assets.safari_pinned_tab | default "safari-pinned-tab.svg" | absURL }}">
-<meta name="theme-color" content="{{ site.Params.assets.theme_color | default "#2e2e33" }}">
-<meta name="msapplication-TileColor" content="{{ site.Params.assets.msapplication_TileColor | default "#2e2e33" }}">
+{{- if not .IsHome }}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+{{- else }}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css">
+{{- end }}
 
-{{- /* RSS */}}
+{{- /* Favicons: only emit links for files that are configured (favicon.ico ships with the theme) */}}
+<link rel="icon" href="{{ site.Params.assets.favicon | default "favicon.ico" | relURL }}">
+{{ with site.Params.assets.favicon16x16 }}<link rel="icon" type="image/png" sizes="16x16" href="{{ . | relURL }}">{{ end }}
+{{ with site.Params.assets.favicon32x32 }}<link rel="icon" type="image/png" sizes="32x32" href="{{ . | relURL }}">{{ end }}
+{{ with site.Params.assets.apple_touch_icon }}<link rel="apple-touch-icon" href="{{ . | relURL }}">{{ end }}
+{{ with site.Params.assets.safari_pinned_tab }}<link rel="mask-icon" href="{{ . | relURL }}">{{ end }}
+<meta name="theme-color" content="{{ site.Params.assets.theme_color | default "#2e2e33" }}">
+
+{{- /* RSS + translations */}}
 {{ range .AlternativeOutputFormats -}}
 <link rel="{{ .Rel }}" type="{{ .MediaType.Type | html }}" href="{{ .Permalink | safeURL }}">
 {{ end -}}

@@ -1,15 +1,13 @@
-name = 'Swiper'
+name = 'Swipefolio'
 license = 'MIT'
-licenselink = 'https://github.com/mmzeynalli/hugo-swiper/blob/main/LICENSE'
+licenselink = 'https://github.com/mmzeynalli/hugo-swipefolio/blob/main/LICENSE'
 description = 'Hugo theme for minimal gallery for artists'
-homepage = 'https://github.com/mmzeynalli/hugo-swiper'
+homepage = 'https://github.com/mmzeynalli/hugo-swipefolio'
 
-tags = ["responsive", "simple", "clean", "gallery", "minimalist", "swiper.js"]
+tags = ["responsive", "simple", "clean", "gallery", "minimalist", "swiper.js", "portfolio"]
 features = [
   "responsive",
-  "single-column",
   "gallery",
-  "table-of-contents",
   "swiper.js",
   "favicon",
   "social-icons",
@@ -18,7 +16,6 @@ min_version = "0.116.0"
 
 demosite = 'https://hugo-swiper-example.netlify.app'
 
-# If the theme has a single author
 [author]
 name = 'Miradil Zeynalli'
 homepage = 'https://mmzeynalli.dev'

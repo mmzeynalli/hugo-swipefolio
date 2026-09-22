@@ -1,3 +1,15 @@
+:root {
+  --sidebar-width: 250px;
+  --gap: 20px;
+  --accent: #007bff;
+  --bg: #eee;
+  --sidebar-bg: #f0f0f0;
+  --text: #333;
+  --muted: #666;
+  --footer-height: 40px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -6,152 +18,420 @@ html,
 body {
   height: 100%;
   margin: 0;
-  padding: 0;
-  overflow: hidden;
-  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
-  background: #eee;
 }
 
-/* Layout container */
-.header {
+body {
+  font-family: var(--font);
+  color: var(--text);
+  background: var(--bg);
+  overflow: hidden;
+}
+
+a {
+  color: var(--accent);
+}
+
+/* ---------------------------------------------------------------- */
+/* Layout                                                            */
+/* ---------------------------------------------------------------- */
+
+.layout {
   display: flex;
   height: 100vh;
+  height: 100dvh;
+}
+
+main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--gap);
+}
+
+.content {
+  flex: 1;
+  min-height: 0;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+footer {
+  flex: none;
+  min-height: var(--footer-height);
+  padding: 10px 0 0;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+footer a {
+  color: inherit;
+}
+
+/* ---------------------------------------------------------------- */
+/* Sidebar                                                           */
+/* ---------------------------------------------------------------- */
+
+.sidebar {
+  flex: none;
+  width: var(--sidebar-width);
+  padding: var(--gap);
+  background: var(--sidebar-bg);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  z-index: 20;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.site-name {
+  margin: 0 0 6px;
+}
+
+.site-email {
+  margin: 0 0 10px;
+  font-size: 14px;
+}
+
+.site-email a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.sidebar hr {
+  border: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+  margin: 10px 0 16px;
+}
+
+.menu,
+.menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu > li {
+  margin-bottom: 12px;
+}
+
+.menu ul {
+  margin: 10px 0 0 20px;
+}
+
+.menu ul li {
+  margin-bottom: 8px;
+}
+
+.menu a {
+  display: inline-block;
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.menu a:hover,
+.menu a.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.menu a.active {
+  font-weight: 600;
+}
+
+/* Mobile controls (hidden on desktop) */
+.hamburger {
+  display: none;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 1001;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 6px;
+  background: #333;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.overlay.open {
+  display: block;
+}
+
+/* ---------------------------------------------------------------- */
+/* Gallery                                                           */
+/* ---------------------------------------------------------------- */
+
+.gallery {
+  width: 100%;
+  height: 100%;
+  max-width: 1600px;
+  max-height: 1200px;
+  background: var(--bg);
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
 
-/* Sidebar (User Info) */
-header {
-  width: 250px;
-  min-width: 220px;
-  /* Prevent shrinking */
-  background-color: #f0f0f0;
-  padding: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 20;
-  transition: transform 0.3s ease;
-  overflow-y: auto;
-  /* Allow scrolling if content is too tall */
+.outerSwiper,
+.innerSwiper {
+  width: 100%;
+  height: 100%;
 }
 
-header h2,
-header p {
-  margin: 0 0 10px 0;
-}
-
-header p {
-  font-size: 14px;
-}
-
-header ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-header li {
-  margin-bottom: 10px;
-}
-
-header a {
-  text-decoration: none;
-  color: #333;
-}
-
-header a:hover {
-  color: #007bff;
-}
-
-li.nested {
-  margin-top: 10px;
-  margin-left: 20px;
-}
-
-/* Only style direct active links, not inherited */
-.section-link.active,
-.nested a.active {
-  color: #007bff;
-  /* or your preferred active color */
-  font-weight: bold;
-  border-bottom: 2px solid #007bff;
-}
-
-
-/* Prevent nested elements from inheriting active styles */
-li.active .nested:not(.active) {
-  background-color: transparent;
-}
-
-li.active .nested:not(.active) a:not(.active) {
-  background-color: transparent;
-  color: inherit;
-  font-weight: normal;
-}
-
-/* Hover states - only for non-active items */
-.section-link:not(.active):hover,
-.nested a:not(.active):hover {
-  color: #007bff;
-  /* or your preferred active color */
-  font-weight: bold;
-  border-bottom: 2px solid #007bff;
-  transition: all 0.2s ease;
-}
-
-/* Remove default link styles */
-.section-link,
-.nested a {
-  text-decoration: none;
-  display: inline-block;
-  transition: all 0.2s ease;
-}
-
-
-/* Main container */
-main {
-  flex: 1;
+.innerSwiper .swiper-slide {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  padding-bottom: 60px;
-  /* Space for footer */
-  position: relative;
-
-  transition: all 0.3s ease;
-  width: calc(100% - 220px);
-  /* Subtract header width */
-  overflow-y: auto;
-  /* Allow content to scroll if needed */
+  padding: 4% 2%;
 }
 
-/* Footer fixed to bottom */
-footer {
-  position: absolute;
-  bottom: 10px;
-  left: 0;
-  width: 100%;
-  height: 50px;
-  color: black;
-  text-align: center;
-  line-height: 50px;
-  font-size: 14px;
-  /* background: rgba(255, 255, 255, 0.8); */
-  /* Semi-transparent background */
-  z-index: 5;
+.swiper-slide img,
+.swiper-slide video {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 .media-placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f0f0f0;
+  padding: 20px;
+  color: var(--muted);
+  font-size: 14px;
 }
 
-.loading-spinner {
-  padding: 20px;
-  color: #666;
-  width: fit-content;
-  height: fit-content;
+.media-placeholder.error {
+  color: #b00020;
+}
+
+/* Project info: title button bottom-right, description panel above it */
+.project-info {
+  position: absolute;
+  right: var(--gap);
+  bottom: var(--gap);
+  z-index: 15;
+}
+
+.project-info[hidden] {
+  display: none;
+}
+
+.project-title {
+  border: 0;
+  border-radius: 5px;
+  padding: 8px 15px;
+  background: rgba(51, 51, 51, 0.8);
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.project-title:hover,
+.project-info.open .project-title {
+  background: #333;
+}
+
+.project-details {
+  display: none;
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 10px);
+  width: 300px;
+  max-width: calc(100vw - 2 * var(--gap));
+  max-height: calc(100vh - 160px);
+  max-height: calc(100dvh - 160px);
+  overflow-y: auto;
+  padding: 15px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.project-info.open .project-details {
+  display: block;
+}
+
+.project-details h3 {
+  margin: 0 28px 10px 0;
+  color: #222;
+}
+
+.project-details p:last-child {
+  margin-bottom: 0;
+}
+
+.close-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  border: 0;
+  background: none;
+  font-size: 18px;
+  line-height: 1;
+  color: #777;
+  cursor: pointer;
+}
+
+/* ---------------------------------------------------------------- */
+/* Home / about page                                                 */
+/* ---------------------------------------------------------------- */
+
+.home .content {
+  overflow-y: auto;
+  align-items: flex-start;
+}
+
+.about-card {
+  width: 100%;
+  max-width: 800px;
+  margin: auto;
+  padding: 40px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.about-card .name {
+  margin: 0 0 30px;
+  font-size: 2.5rem;
+  font-weight: 300;
+}
+
+.avatar-img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.about-card .description {
+  margin: 30px auto;
+  max-width: 600px;
+  font-size: 1.2rem;
+  font-weight: 300;
+  line-height: 1.8;
+  color: #444;
+}
+
+.social-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 30px;
+  margin: 30px 0;
+}
+
+.social-links a {
+  font-size: 24px;
+  color: var(--muted);
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-links a:hover {
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+/* ---------------------------------------------------------------- */
+/* Responsive                                                        */
+/* ---------------------------------------------------------------- */
+
+@media (max-width: 992px) {
+  :root {
+    --gap: 12px;
+    --footer-height: 0px;
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    height: 100dvh;
+    width: 280px;
+    max-width: 85vw;
+    padding-top: 70px;
+    background: #fff;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    transform: translateX(-100%);
+    z-index: 1000;
+  }
+
+  .sidebar.open {
+    transform: none;
+  }
+
+  main {
+    padding-top: 68px;
+  }
+
+  footer {
+    padding-top: 8px;
+    font-size: 12px;
+  }
+
+  .about-card {
+    padding: 24px 16px;
+  }
+
+  .about-card .name {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 576px) {
+  footer {
+    font-size: 11px;
+  }
+
+  .project-title {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .project-details {
+    font-size: 13px;
+  }
+
+  .about-card .name {
+    font-size: 1.6rem;
+  }
+
+  .about-card .description {
+    font-size: 1rem;
+  }
+
+  .avatar-img {
+    width: 110px;
+    height: 110px;
+  }
 }

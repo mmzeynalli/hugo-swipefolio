@@ -1,52 +1,41 @@
-<div class="swiper-container-wrapper">
-    <div class="swiper outerSwiper swiper-v">
-        <div class="swiper-wrapper">
-            {{ range .Site.Sections }}
-            {{ range $i, $page := .Pages }}
-            <div class="swiper-slide" data-slide-index="{{ $i }}">
-                <div class="swiper innerSwiper swiper-h">
-                    <div class="swiper-wrapper">
-                        {{ range $j, $media := $page.Params.Slideshow }}
-                        <div class="swiper-slide" data-media-src="{{ $media }}" data-media-index="{{ $j }}">
-                            <div class="media-placeholder">
-                                <!-- Loading indicator -->
-                                <div class="loading-spinner">Loading...</div>
-                            </div>
-                        </div>
-                        {{ end }}
-                    </div>
-                    <div class="swiper-pagination"></div>
-                </div>
+{{- $projects := partial "functions/projects.html" . -}}
+
+<div class="gallery">
+  <div class="swiper outerSwiper">
+    <div class="swiper-wrapper">
+      {{- range $i, $page := $projects }}
+      <div class="swiper-slide" data-href="{{ $page.RelPermalink }}" data-title="{{ $page.Title }}">
+        <div class="swiper innerSwiper">
+          <div class="swiper-wrapper">
+            {{- range $j, $media := $page.Params.slideshow }}
+            {{- /* Resolve page-bundle resources first, then site-relative paths, then absolute URLs */}}
+            {{- $src := $media }}
+            {{- with $page.Resources.GetMatch $media }}
+              {{- $src = .RelPermalink }}
+            {{- else }}
+              {{- if not (or (hasPrefix $media "http") (hasPrefix $media "//")) }}{{ $src = $media | relURL }}{{ end }}
+            {{- end }}
+            <div class="swiper-slide" data-src="{{ $src }}" data-alt="{{ $page.Title }} – {{ add $j 1 }}">
+              <div class="media-placeholder" role="status">Loading…</div>
             </div>
-            {{ end }}
-            {{ end }}
+            {{- end }}
+          </div>
+          <div class="swiper-pagination"></div>
         </div>
-        <div class="swiper-pagination"></div>
+      </div>
+      {{- end }}
     </div>
+    <div class="swiper-pagination"></div>
+  </div>
 </div>
 
-<!-- Centralized Project Info -->
-<div id="centralProjectInfo" class="project-info-container"></div>
-
-<!-- Hidden storage for all project info -->
-<div id="projectDataStorage" style="display: none;">
-    {{ $i := 0 }}
-    {{ range .Site.Sections }}
-    {{ range .Pages }}
-    <div id="project-info-{{ $i }}">
-        <div class="project-title" data-project="info-{{ $i }}">{{ .Title }}</div>
-        <div class="project-details" id="info-{{ $i }}">
-            <button class="close-btn">&times;</button>
-            <h3>{{ .Title }}</h3>
-            {{ .Content }}
-        </div>
-    </div>
-    {{ $i = add $i 1 }}
-    {{ end }}
-    {{ end }}
+{{- range $i, $page := $projects }}
+<div class="project-info" data-index="{{ $i }}" hidden>
+  <button type="button" class="project-title" aria-expanded="false">{{ $page.Title }}</button>
+  <div class="project-details">
+    <button type="button" class="close-btn" aria-label="Close">&times;</button>
+    <h3>{{ $page.Title }}</h3>
+    {{ $page.Content }}
+  </div>
 </div>
-
-{{ partialCached "head/js.html" . }}
-
-{{ $swiper := resources.Get "js/swiper.js" | js.Build }}
-<script src="{{ $swiper.RelPermalink }}" defer></script>
+{{- end }}

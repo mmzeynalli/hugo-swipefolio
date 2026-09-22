@@ -1,0 +1,27 @@
+{{- /*
+Returns the ordered list of gallery pages, in the same order the sidebar shows them:
+every `main` menu entry that points at a section contributes that section's regular
+pages (sorted by weight, then date). This is the single source of truth shared by
+header.html and swiper.html so slide indexes and menu entries always line up.
+If no menu entry points at a section, all regular pages are used.
+*/ -}}
+{{- $projects := slice -}}
+{{- range site.Menus.main -}}
+  {{- with .Page -}}
+    {{- if eq .Kind "section" -}}
+      {{- range .RegularPages -}}
+        {{- if .Params.slideshow -}}
+          {{- $projects = $projects | append . -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- if not $projects -}}
+  {{- range site.RegularPages -}}
+    {{- if .Params.slideshow -}}
+      {{- $projects = $projects | append . -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $projects -}}
